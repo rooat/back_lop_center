@@ -1,0 +1,118 @@
+<%- include header %>
+<div class="container col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="row">
+<%- include left %>
+        <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9">
+            <ol class="breadcrumb">
+                <li><a href="/">首页</a></li>
+                <li><a href="/phenix">仓位管理</a></li>
+                <li><a href="#">轮次管理</a></li>
+            </ol>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>phenixId</th>
+                        <th>level</th>
+                        <th>Feeded</th>
+                        <th>Amount</th>
+                        <th>Automatic</th>
+                        <th>State</th>
+                        <th>Startime</th>
+                        <th>Operate</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                <% roundlist.forEach(function(value){ %>
+                <tr>
+                    <td><%= value['Num'] %></td>
+                    <td><%= value['Levels'] %></td>
+                    <td><%= Number(value['Feeded']).toFixed(2) %></td>
+                    <td><%= Number(value['Amount']).toFixed(2) %></td> 
+                    <td><%= value['Automatic'] %></td>
+                    <td>
+                        <% if(value['Istatus']==1){ %>
+                            未开启
+                        <% }else if(value['Istatus']==2){ %>
+                            进行中
+                        <% }else if(value['Istatus']==3 ){ %>
+                            成功
+                        <% }else if(value['Istatus']==4){ %>
+                            失败
+                        <% } %>
+                    </td>
+                    <td><% if(value['Startime']){ %>
+                        <%= new Date(value['Startime']).getFullYear()+'-'+(new Date(value['Startime']).getMonth()+1)+'-'+new Date(value['Startime']).getDate() %>
+                        <% }else{%>
+                            0000-00-00
+                        <% } %>
+                    </td>
+                    <td>
+                        
+                        <% if(value['Istatus']==1){ %>
+                            <button type="button" class="btn btn-primary" onclick="startNextRound('<%= value['Num']%>','<%= value['Levels']%>','<%= value['Automatic']%>')">
+                                开启
+                            </button>
+                        <% }else if(value['Istatus']==2) {%>
+                            <button type="button" class="btn btn-primary" onclick="overRound('<%= value['Num']%>','<%= value['Levels']%>')">
+                                结束
+                            </button> 
+                        <% }else if(value["Istatus"]==3){ %>
+                            <button type="button" class="btn btn-default" disabled="disabled">
+                                   成功 
+                                </button>  
+                        <% }else if(value["Istatus"]==4){ %>
+                            <button type="button" class="btn btn-default" disabled="disabled">
+                                   失败 
+                                </button>  
+                        <% } %> 
+                       </td>
+                </tr>
+                <% }) %>
+                </tbody>
+            </table>
+            
+        </div>
+        <div class="col-lg-12 text-center">
+                <ul class="pagination">
+                    <%- include page %>
+                </ul>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="roundmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <p style="font-size: 20px" id="roundtext">
+                </p>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include footer %>
+<script type="text/javascript">
+
+    function startNextRound (num,level,automatic){
+        axios.post('/add_startNextRound',{"num":num,"level":level,"automatic":automatic}).then(function (res){
+            console.log(res.data)
+            reload_b(res.data.resp) 
+        })
+    }
+    function overRound(num,level){
+        axios.post('/overRound',{"nums":num,"level":level}).then(function (res){
+
+            reload_b(res.data.resp)
+        }) 
+    }
+    function reload_b(texst){
+        $("#roundtext").html(texst)
+        $("#roundmodal").modal("toggle");
+        setTimeout(function(){
+            $("#roundmodal").modal("hide");
+            window.location.reload()
+        },2000)
+    }
+</script>

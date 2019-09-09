@@ -1,0 +1,4 @@
+##ignore this file##
+/node_modules/
+/logs/
+/utils/db.js
