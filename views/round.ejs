@@ -51,7 +51,7 @@
                     <td>
                         
                         <% if(value['Istatus']==1){ %>
-                            <button type="button" class="btn btn-primary" onclick="startNextRound('<%= value['Num']%>','<%= value['Levels']%>','<%= value['Automatic']%>')">
+                            <button type="button" class="btn btn-primary" >
                                 开启
                             </button>
                         <% }else if(value['Istatus']==2) {%>
@@ -59,7 +59,7 @@
                                 结束
                             </button> 
                         <% }else if(value["Istatus"]==3){ %>
-                            <button type="button" class="btn btn-default" disabled="disabled">
+                            <button type="button" class="btn btn-default" onclick="startNextRound('<%= value['Num']%>','<%= value['Levels']%>')">
                                    成功 
                                 </button>  
                         <% }else if(value["Istatus"]==4){ %>
@@ -92,11 +92,35 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="startmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <p style="font-size: 20px" >
+                    <input type="hidden" id="numval"/>
+                    <input type="hidden" id="levelval"/>
+                    <span>automatic:</span><input type="number" id="automaticval"/>
+                </p>
+                <button type="button" class="btn btn-default" onclick="submitbtn()">确认开启</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
 <%- include footer %>
 <script type="text/javascript">
 
-    function startNextRound (num,level,automatic){
-        axios.post('/add_startNextRound',{"num":num,"level":level,"automatic":automatic}).then(function (res){
+    function startNextRound (num,level){
+        $("#numval").val(num)
+        $("#levelval").val(level)
+        $("#startmodal").modal("toggle") 
+    }
+    function submitbtn(){
+        $("#startmodal").modal("hide") 
+        let nums = $("#numval").val()
+        let levels = $("#levelval").val() 
+        let automaticvals = $("#automaticval").val()
+        axios.post('/add_startNextRound',{"num":nums,"level":levels,"automatic":automaticvals}).then(function (res){
             console.log(res.data)
             reload_b(res.data.resp) 
         })
