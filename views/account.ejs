@@ -7,25 +7,25 @@
                 <li><a href="/">首页</a></li>
                 <li><a href="/account">用户管理</a></li>
             </ol>
-            <!-- <div class="row" style="margin-left:10px">
+            <div class="row" style="margin-left:10px">
                <input type="text" style="border-radius: 7px;margin-right: 2%; height: 30px;font-size: 18px;" id="invitecodesearch" /><button onclick="searchaccount()" class="btn btn-primary" placeholder="输入值">搜索</button>
-               <input type="text" style="border-radius: 7px;margin-right: 2%; height: 30px;font-size: 18px;" id="invitecode_deposit" /><button onclick="calaccount_deposit()" class="btn btn-primary" placeholder="输入值" id="calaccount_depositbtn">伞下充值提现总量查询</button>  
+               <!-- <input type="text" style="border-radius: 7px;margin-right: 2%; height: 30px;font-size: 18px;" id="invitecode_deposit" /><button onclick="calaccount_deposit()" class="btn btn-primary" placeholder="输入值" id="calaccount_depositbtn">伞下充值提现总量查询</button>   -->
                 
-            </div> -->
+            </div>
             <div class="row" style="margin:20px 0 20px 10px;color:red">
                 <span id="total_deposit_value"></span>
             </div>
             <table class="table" style="table-layout:fixed;">
                 <thead>
                     <tr>
-                        <th>UserId</th>
-                        <th>Account</th>
-                        <th>MasterID</th>
+                        <th>用户ID</th>
+                        <th>账户</th>
+                        <th>主节点ID</th>
                         <th>ETZ</th>
-                        <th>Amount</th>
-                        <th>Levels</th>
-                        <th>Istatus</th>
-                        <th>Operate</th>
+                        <th>数量</th>
+                        <th>等级</th>
+                        <th>状态</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,9 +47,9 @@
                         <%}%>
                     </th>
                     <td>
-                        <!-- <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#updateNotice" onclick="update_amountdiv('<%= value['_id']%>')">
-                            冻结
-                        </button> -->
+                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#updateNotice" onclick="update_amountdiv('<%= value['account']%>')">
+                           设置业绩 
+                        </button>
                         <% if(value['istatus']==0){ %>
                             <button type="button" class="btn btn-warning" onclick="freezebtn(1,'<%= value['account'] %>')">
                                 冻结
@@ -83,9 +83,9 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <label for="inputPassword" class="col-sm-4 control-label">offerAchievement : </label>
+                    <label for="inputPassword" class="col-sm-4 control-label">数量 : </label>
                     <div class="col-sm-8">
-                        <input name="offerAchievement" style=" border-radius: 7px; height: 40px;font-size: 20px;" id="offerAchievement" type="number" placeholder="offerAchievement"/>
+                        <input name="offerAchievement" style=" border-radius: 7px; height: 40px;font-size: 20px;" id="offerAchievement" type="number" />
                     </div>
                     <div style="margin: 50px 0 30px 3%;">
                         <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="update_amount_btn()">确定</button>
@@ -129,10 +129,12 @@
        $("#updateAmountModal").modal("toggle");
     }
     function update_amount_btn(){
+        $("#updateAmountModal").modal("hide");
         let id =$("#amountid").val();
        let amount = $("#offerAchievement").val();
-       axios.post('/updateAmount',{"id":id,"amount":amount}).then(function(response){
-         $("#testmodal").modal("toggle")
+       axios.post('/updateAmount',{"id":id,"amount":amount}).then(function(ress){
+        //  $("#testmodal").modal("toggle")
+         reload_b(ress.data.resp)
        }) 
     }
     function searchaccount(){

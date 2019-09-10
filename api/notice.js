@@ -23,6 +23,9 @@ exports.index =async function (req, res) {
 
 exports.findOne = async function(req , res){
     let rid = req.body.rid;
+    if(!rid){
+        return res.send({"resp":"请输入正确的值"})
+    }
     let notice = await config.db.notice_info(rid) 
     res.send({"resp":notice.recordset[0]});
 }
@@ -30,6 +33,9 @@ exports.findOne = async function(req , res){
 exports.add = async function(req , res){
     let msg = req.body.msg;
     let title = req.body.title;
+    if(!msg || !title){
+        return res.send({"resp":"请输入正确的值"})
+    }
     let ress = await config.db.add_notice(title,msg) 
     return res.send({"resp":ress.output.outmsg})
 }
@@ -38,6 +44,9 @@ exports.edit =async function (req, res) {
     let rid = req.body.rid;
     let title = req.body.title;
     let msg = req.body.msg;
+    if(!rid || !title || !msg){
+        return res.send({"resp":"请输入正确的值"})
+    }
     let ress = await config.db.modify_notice(rid,title,msg) 
     // res.redirect('/notice')
     return res.send({"resp":ress.output.outmsg});

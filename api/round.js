@@ -28,13 +28,19 @@ exports.index =async function (req, res) {
 exports.add_startNextRound = async function(req , res){
     let num = req.body.num;
     let level = req.body.level
-    let automatic = req.body.automatic
+    let automatic = req.body.automatic;
+    if(!num || !level || !automatic){
+        return res.send({"resp":"请输入正确的值"})
+    }
     let ress = await config.db.Mine_recruitment(num,level,automatic)
     return res.send({"resp":ress.output.outmsg})
 }
 exports.overRound = async function(req,res){
     let nums = req.body.nums;
     let level = req.body.level;
+    if(!nums || !level){
+        return res.send({"resp":"请输入正确的值"})
+    }
     let rss = await config.db.settle_account(nums,level)
     return res.send({"resp":rss.output.outmsg})
 }

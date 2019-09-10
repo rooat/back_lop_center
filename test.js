@@ -125,7 +125,7 @@ async function userinfo_list(){
   console.log(result)
   return result 
 }
-userinfo_list()
+// userinfo_list()
 async function modify_userinfo(){
   let mssql_db = await getConnection(); 
   var result = await mssql_db.request()
@@ -137,3 +137,24 @@ async function modify_userinfo(){
   return result 
 }
 // modify_userinfo()
+async function search_account(){
+  let mssql_db = await getConnection(); 
+  var result = await mssql_db.request()
+  .input("account","test016")
+  .output("outmsg")
+  .execute('p_background_search_account')
+  console.log(result.recordset)
+  return result 
+}
+// search_account("test001")
+async function set_performance(account){
+  let mssql_db = await getConnection(); 
+  var result = await mssql_db.request()
+  .input("account","test016")
+  .input("perform",1111)
+  .output("outmsg")
+  .execute('p_background_set_performance')
+  console.log(result)
+  return result 
+}
+set_performance()

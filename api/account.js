@@ -5,11 +5,9 @@ let moment = require('moment');
 let pagesize = 30;
 
 exports.index =async function (req, res) {
-    let inviteCode = req.query.inviteCode;
+    let account = req.query.inviteCode;
     let option = {};
-    if(inviteCode){
-        option ={"inviteCode":inviteCode}
-    }
+    
     let page = req.query.page ? req.query.page : 1; //获取当前页数，如果没有则为1
     let url = req.originalUrl; //获取当前url，并把url中page参数过滤掉
     url = url.replace(/([?&]*)page=([0-9]+)/g, '');
@@ -19,23 +17,30 @@ exports.index =async function (req, res) {
         url += '?';
     }
     let ps = (page-1)*pagesize;
-    let list = await config.db.userinfo_list(page,pagesize);
+    let list
+    let count=1;
+    if(account){
+        list = await config.db.search_account(account)
+    }else{
+        list = await config.db.userinfo_list(page,pagesize);
+        count = list.output.total;
+    }
     
     res.render('account', {
             accountlist: list.recordset,
-            page: showPage.show(url, list.output.total, pagesize, page),
+            page: showPage.show(url, count, pagesize, page),
         });
 };
 
 exports.add_amount =async function (req, res) {
     let id = req.body.id; 
     let amount = req.body.amount;
-    let account = await config.Account.findOne({"_id":id});
-    if(account && amount ){
-        await config.Account.update({"_id":id},{$set:{"offerAchievement":amount}});
-        return res.send({"resp":"success"});
+    console.log("id=="+id+",amount="+amount)
+    if(!id ||!amount){
+        return res.send({"resp":"请输入正确的值"})
     }
-    return res.send({"resp":"请输入正确的值"})
+    let ress = await config.db.set_performance(id,amount);
+    return res.send({"resp":ress.output.outmsg}) 
 };
 var totalDeposit = 0;
 var totalWithdraw = 0;
@@ -95,6 +100,9 @@ exports.delete =async function (req, res) {
 exports.freeze = async function(req,res){
     let index = req.body.index;
     let account = req.body.account;
+    if(!index ||!account){
+        return res.send({"resp":"请输入正确的值"})
+    }
     let ress = await config.db.modify_userinfo(account,index)
     return res.send({"resp":ress.output.outmsg})
 }
