@@ -51,7 +51,7 @@
                     <td>
                         
                         <% if(value['Istatus']==1){ %>
-                            <button type="button" class="btn btn-primary" >
+                            <button type="button" class="btn btn-primary" onclick="startNextRound('<%= value['Num']%>','<%= value['Levels']%>')">
                                 开启
                             </button>
                         <% }else if(value['Istatus']==2) {%>
@@ -59,7 +59,7 @@
                                 结束
                             </button> 
                         <% }else if(value["Istatus"]==3){ %>
-                            <button type="button" class="btn btn-default" onclick="startNextRound('<%= value['Num']%>','<%= value['Levels']%>')">
+                            <button type="button" class="btn btn-default" disabled="disabled">
                                    成功 
                                 </button>  
                         <% }else if(value["Istatus"]==4){ %>
