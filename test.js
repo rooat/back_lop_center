@@ -39,7 +39,7 @@ async function Mine_recruitment()  {
     .execute('p_background_Mine_recruitment')
 	console.log(result)
 }
-Mine_recruitment()
+// Mine_recruitment()
 async function settle_account()  {
   let mssql_db = await getConnection(); 
     var result = await mssql_db.request()
@@ -102,7 +102,7 @@ async function add_notice()  {
 }
 // add_notice()
 async function modify_notice()  {
-  let mssql_db = await getConnection(); 
+  
     var result = await mssql_db.request()
     .input('rid', 10)
     .input('title',"ddd")
@@ -115,3 +115,25 @@ async function modify_notice()  {
 // var config = require('./config')
 // let pwd = config.utils.md5("etz123456");
 // console.log(pwd)
+async function userinfo_list(){
+  let mssql_db = await getConnection(); 
+  var result = await mssql_db.request()
+  .input("from_index",1)
+  .input("amount",10)
+  .output("total")
+  .execute('p_background_userinfo_list')
+  console.log(result)
+  return result 
+}
+userinfo_list()
+async function modify_userinfo(){
+  let mssql_db = await getConnection(); 
+  var result = await mssql_db.request()
+  .input("account","浪哥1")
+  .input("status",1)
+  .output("outmsg")
+  .execute('p_background_modify_userinfo')
+  console.log(result)
+  return result 
+}
+// modify_userinfo()

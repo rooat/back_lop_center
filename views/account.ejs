@@ -1,0 +1,169 @@
+<%- include header %>
+<div class="container col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="row">
+<%- include left %>
+        <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9">
+            <ol class="breadcrumb">
+                <li><a href="/">首页</a></li>
+                <li><a href="/account">用户管理</a></li>
+            </ol>
+            <!-- <div class="row" style="margin-left:10px">
+               <input type="text" style="border-radius: 7px;margin-right: 2%; height: 30px;font-size: 18px;" id="invitecodesearch" /><button onclick="searchaccount()" class="btn btn-primary" placeholder="输入值">搜索</button>
+               <input type="text" style="border-radius: 7px;margin-right: 2%; height: 30px;font-size: 18px;" id="invitecode_deposit" /><button onclick="calaccount_deposit()" class="btn btn-primary" placeholder="输入值" id="calaccount_depositbtn">伞下充值提现总量查询</button>  
+                
+            </div> -->
+            <div class="row" style="margin:20px 0 20px 10px;color:red">
+                <span id="total_deposit_value"></span>
+            </div>
+            <table class="table" style="table-layout:fixed;">
+                <thead>
+                    <tr>
+                        <th>UserId</th>
+                        <th>Account</th>
+                        <th>MasterID</th>
+                        <th>ETZ</th>
+                        <th>Amount</th>
+                        <th>Levels</th>
+                        <th>Istatus</th>
+                        <th>Operate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                <% accountlist.forEach(function(value,index){ %>
+                <tr>
+                    <th><%= value['userid'] %></th> 
+                    <th><%= value['account'] %></th>
+                    <th><%= value['masterID'] %></th>
+                    <th><%= value['etz'] %></th>
+                    <th><%= value['amount'] %></th>
+                    <th><%= value['levels']%></th>
+
+                    <th>
+                        <% if(value['istatus']==0){ %>
+                            正常
+                        <%}else if(value['istatus']==1){%>
+                            冻结
+                        <%}%>
+                    </th>
+                    <td>
+                        <!-- <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#updateNotice" onclick="update_amountdiv('<%= value['_id']%>')">
+                            冻结
+                        </button> -->
+                        <% if(value['istatus']==0){ %>
+                            <button type="button" class="btn btn-warning" onclick="freezebtn(1,'<%= value['account'] %>')">
+                                冻结
+                            </button>
+                        <%}else if(value['istatus']==1){%>
+                            <button type="button" class="btn btn-primary" onclick="freezebtn(0,'<%= value['account'] %>')">
+                                解冻
+                            </button>
+                        <%}%> 
+                    </td>
+                </tr>
+                <% }) %>
+                </tbody>
+            </table>
+            
+        </div>
+        <div class="col-lg-12 text-center">
+                <ul class="pagination">
+                    <%- include page %>
+                </ul>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="amountid"/>
+<div class="modal fade" id="updateAmountModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        设置业绩
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <label for="inputPassword" class="col-sm-4 control-label">offerAchievement : </label>
+                    <div class="col-sm-8">
+                        <input name="offerAchievement" style=" border-radius: 7px; height: 40px;font-size: 20px;" id="offerAchievement" type="number" placeholder="offerAchievement"/>
+                    </div>
+                    <div style="margin: 50px 0 30px 3%;">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="update_amount_btn()">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="testmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <p style="font-size: 20px" id="modaltext">
+                            设置成功
+                        </p>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<div class="modal fade" id="noticemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <p style="font-size: 20px" id="noticetext">
+                    
+                </p>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include footer %>
+<script type="text/javascript">
+    function update_amountdiv(id){
+        $("#amountid").val(id);
+       $("#updateAmountModal").modal("toggle");
+    }
+    function update_amount_btn(){
+        let id =$("#amountid").val();
+       let amount = $("#offerAchievement").val();
+       axios.post('/updateAmount',{"id":id,"amount":amount}).then(function(response){
+         $("#testmodal").modal("toggle")
+       }) 
+    }
+    function searchaccount(){
+       let inviteCode = $("#invitecodesearch").val();
+       window.location.href="/account?inviteCode="+inviteCode; 
+    }
+    function calaccount_deposit(){
+        let invitecode_deposit = $("#invitecode_deposit").val();
+        $("#calaccount_depositbtn").attr("disabled",true)
+        // alert(invitecode_deposit)
+        axios.post('/calculateTotal',{"inviteCode":invitecode_deposit}).then(function(res){
+            // console.log(res.data.resp)
+            let deposit = res.data.resp.deposit;
+            let withdraw = res.data.resp.withdraw;
+            let member = res.data.resp.member;
+            let subs = Number(deposit)-Number(withdraw);
+            $("#calaccount_depositbtn").attr("disabled",false)
+            $("#total_deposit_value").html("&nbsp;&nbsp;&nbsp;&nbsp;充值 &nbsp;:&nbsp;"+Number(deposit).toFixed(4)+";----提现 &nbsp;:&nbsp;"+Number(withdraw).toFixed(4)+";----差额&nbsp;:&nbsp;"+Number(subs).toFixed(4)+"----人数;"+member)
+        })
+    }
+    function freezebtn(index,account){
+        axios.post('/freeze_account',{"index":index,"account":account}).then(function(res){
+            reload_b(ress.data.resp) 
+        })   
+    }
+    function reload_b(texst){
+        $("#noticetext").html(texst)
+        $("#noticemodal").modal("toggle");
+        setTimeout(function(){
+            $("#noticemodal").modal("hide");
+            window.location.reload()
+        },2000)
+    }
+</script>

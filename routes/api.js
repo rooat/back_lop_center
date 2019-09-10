@@ -4,10 +4,10 @@ var login = require('../api/login');
 var phenix = require('../api/phenix')
 var round = require('../api/round')
 var notice = require('../api/notice');
-// var account = require('../api/account')
-// var common = require('../api/common')
-// var datas = require('../api/datas')
-// var award = require('../api/award')
+var account = require('../api/account')
+var common = require('../api/common')
+var datas = require('../api/datas')
+var award = require('../api/award')
 
 var auth = function (req, res, next) {
 	if (req.session && req.session.isLogged) {
@@ -47,11 +47,14 @@ router.post('/find_notice',notice.findOne)
 router.post('/add_notice',notice.add);
 router.post('/update_notice',notice.edit);
 
-// router.get('/account',account.index);
-// router.post('/updateAmount',account.add_amount);
-// router.post('/calculateTotal',account.calculate_total);
+router.get('/account',account.index);
+router.post('/freeze_account',account.freeze);
+router.post('/updateAmount',account.add_amount);
+router.post('/calculateTotal',account.calculate_total);
 
-// router.get('/award',award.index);
-// router.post('/sendAward',award.send_award)
+router.get('/award',award.index);
+router.post('/sendAward',award.send_award)
+router.get('/latest_blocknumber',common.getBlockNumber);
 
+router.get('/data_address',datas.index);
 module.exports = router;
