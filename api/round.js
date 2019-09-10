@@ -30,7 +30,7 @@ exports.add_startNextRound = async function(req , res){
     let level = req.body.level
     let automatic = req.body.automatic
     let ress = await config.db.Mine_recruitment(num,level,automatic)
-    return res.send({"resp":ress.outmsg})
+    return res.send({"resp":ress.output.outmsg})
 }
 exports.overRound = async function(req,res){
     let nums = req.body.nums;
