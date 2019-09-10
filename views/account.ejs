@@ -154,7 +154,7 @@
         })
     }
     function freezebtn(index,account){
-        axios.post('/freeze_account',{"index":index,"account":account}).then(function(res){
+        axios.post('/freeze_account',{"index":index,"account":account}).then(function(ress){
             reload_b(ress.data.resp) 
         })   
     }
