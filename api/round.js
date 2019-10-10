@@ -27,12 +27,20 @@ exports.index =async function (req, res) {
 };
 exports.add_startNextRound = async function(req , res){
     let num = req.body.num;
-    let level = req.body.level
-    let automatic = req.body.automatic;
+    let level = req.body.level;
+    let minimum = req.body.minimum;
+    let maximum = req.body.maximum;
+    let first = req.body.first;
+    let second = req.body.second;
+    let third = req.body.third;
+    let fourth = req.body.fourth;
+    let fifth = req.body.fifth;
+    
     if(!num || !level || !automatic){
         return res.send({"resp":"请输入正确的值"})
     }
-    let ress = await config.db.Mine_recruitment(num,level,automatic)
+
+    let ress = await config.db.Mine_recruitment(num,level,minimum,maximum,first,second,third,fourth,fifth)
     return res.send({"resp":ress.output.outmsg})
 }
 exports.overRound = async function(req,res){

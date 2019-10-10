@@ -24,6 +24,9 @@ exports.index =async function (req, res) {
 
 exports.add= async function(req , res){
     let startGoal = req.body.amount;
+    if(!startGoal){
+        return res.send({"resp":"请输入正确的值"})
+    }
     let ress = await config.db.generate_phoenix(startGoal)
     // console.log(ress)
     return res.send({"resp":ress.output.outmsg})

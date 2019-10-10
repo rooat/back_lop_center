@@ -5,7 +5,7 @@ const conf = {
     user: 'swkdbsa',
     password: 'gft%$#@48828YTHEbds',
     server:'18.140.25.68',
-    database: 'SuperKuang_new',
+    database: 'SuperKuang',
     pool: {
         max: 10,
         min: 0,
@@ -157,4 +157,13 @@ async function set_performance(account){
   console.log(result)
   return result 
 }
-set_performance()
+async function numerical_statement(){
+  let mssql_db = await getConnection();
+  console.log(mssql_db) 
+  var result = await mssql_db.request()
+  
+  .execute('p_background_numerical_statement')
+  console.log(result)
+  return result 
+}
+numerical_statement()

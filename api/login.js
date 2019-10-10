@@ -5,7 +5,8 @@ exports.Plogin =async function (req, res) {
     var password = req.body.password;
 
     if(username && password){
-    	let pwd = config.utils.md5(password);
+        let pwd = config.utils.md5(password);
+        console.log(pwd)
         // let user = await config.User.findOne({"username":username,"password":pwd});
         let user = {
             "username":"admin",
@@ -54,6 +55,9 @@ exports.logout = function (req, res) {
     res.redirect('/login');
 };
 
-exports.home = function (req, res) {
-    res.render('home');
+exports.home = async function (req, res) {
+    let datas = await config.db.numerical_statement();
+    res.render('home',{
+        datas : datas.recordset[0]
+    });
 };

@@ -100,7 +100,7 @@ exports.delete =async function (req, res) {
 exports.freeze = async function(req,res){
     let index = req.body.index;
     let account = req.body.account;
-    if(!index ||!account){
+    if(index==null ||!account){
         return res.send({"resp":"请输入正确的值"})
     }
     let ress = await config.db.modify_userinfo(account,index)

@@ -99,7 +99,13 @@
                 <p style="font-size: 20px" >
                     <input type="hidden" id="numval"/>
                     <input type="hidden" id="levelval"/>
-                    <span>automatic:</span><input type="number" id="automaticval"/>
+                    <p><span>最小额度:</span><input type="number" id="minimum"/></p>
+                    <p><span>最大额度:</span><input type="number" id="maximum"/></p>
+                    <p><span>500档个数:</span><input type="number" id="first"/></p>
+                    <p><span>1000档个数:</span><input type="number" id="second"/></p>
+                    <p><span>3000档个数:</span><input type="number" id="third"/></p>
+                    <p><span>5000档个数:</span><input type="number" id="fourth"/></p>
+                    <p><span>10000档个数:</span><input type="number" id="fifth"/></p>
                 </p>
                 <button type="button" class="btn btn-default" onclick="submitbtn()">确认开启</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -118,9 +124,25 @@
     function submitbtn(){
         $("#startmodal").modal("hide") 
         let nums = $("#numval").val()
-        let levels = $("#levelval").val() 
-        let automaticvals = $("#automaticval").val()
-        axios.post('/add_startNextRound',{"num":nums,"level":levels,"automatic":automaticvals}).then(function (res){
+        let levels = $("#levelval").val()
+        let minimum = $("#minimum").val()  
+        let maximum = $("#maximum").val() 
+        let first = $("#first").val() 
+        let second = $("#second").val() 
+        let third = $("#third").val() 
+        let fourth = $("#fourth").val() 
+        let fifth = $("#fifth").val() 
+        axios.post('/add_startNextRound',{
+            "num":nums,
+            "level":levels,
+            "minimum":minimum,
+            "maximum":maximum,
+            "first":first,
+            "second":second,
+            "third":third,
+            "fourth":fourth,
+            "fifth":fifth,
+        }).then(function (res){
             console.log(res.data)
             reload_b(res.data.resp) 
         })
