@@ -31,15 +31,22 @@ async function generate_phoenix()  {
 // generate_phoenix()
 async function Mine_recruitment()  {
   let mssql_db = await getConnection(); 
-    var result = await mssql_db.request()
-    .input('num', 3)
-    .input('level', 1)
-    .input('automatic', 10)
-    .output('outmsg')
-    .execute('p_background_Mine_recruitment')
-	console.log(result)
+  var result = await mssql_db.request()
+  .input("num",3)
+  .input("level",2)
+  .input("minimum",1)
+  .input("maximum",1)
+  .input("first",1)
+  .input("second",1)
+  .input("third",1)
+  .input("fourth",1)
+  .input("fifth",1)
+  .output("outmsg")
+  .execute('p_background_Mine_recruitment')
+  console.log(result)
+  return result 
 }
-// Mine_recruitment()
+Mine_recruitment()
 async function settle_account()  {
   let mssql_db = await getConnection(); 
     var result = await mssql_db.request()
@@ -166,4 +173,4 @@ async function numerical_statement(){
   console.log(result)
   return result 
 }
-numerical_statement()
+// numerical_statement()

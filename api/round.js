@@ -36,7 +36,7 @@ exports.add_startNextRound = async function(req , res){
     let fourth = req.body.fourth;
     let fifth = req.body.fifth;
     
-    if(!num || !level || !automatic){
+    if(!num || !level){
         return res.send({"resp":"请输入正确的值"})
     }
 
