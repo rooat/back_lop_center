@@ -21,7 +21,7 @@
     "express-session": "^1.15.5",
     "log-master": "^1.0.0",
     "log4js": "^4.4.0",
-    "mongoose": "^5.6.4",
+    "mongoose": "^5.7.5",
     "mongoose-double": "0.0.1",
     "morgan": "~1.8.1",
     "mssql": "^5.1.0",
